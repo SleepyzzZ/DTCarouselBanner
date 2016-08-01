@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="play local images"
+        android:textSize="30sp"/>
+
+    <com.sleepyzzz.dtcarouselbanner.DTCarouselBanner
+        android:id="@+id/carousel1"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        custom:autoplay_internal="5000"
+        custom:autoplayable="true"
+        custom:indicator_position="RIGHT"
+        custom:indicator_visibility="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="play net images"
+        android:textSize="30sp"/>
+
+    <com.sleepyzzz.dtcarouselbanner.DTCarouselBanner
+        android:id="@+id/carousel2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        custom:autoplay_internal="3000"
+        custom:indicator_position="CENTER"
+        custom:indicator_visibility="true"/>
+</LinearLayout>
