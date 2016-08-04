@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="DTCarouselBanner">
+        <!--指示器是否可见 true or false-->
         <attr name="indicator_visibility" format="boolean"/>
+        <!--底部指示器显示位置-->
         <attr name="indicator_position" format="enum">
             <enum name="CENTER" value="0"/>
             <enum name="LEFT" value="1"/>
             <enum name="RIGHT" value="2"/>
         </attr>
+        <!--指示器容器背景-->
         <attr name="indicator_background" format="reference|color"/>
+        <!--轮播时间间隔 ms-->
         <attr name="autoplay_internal" format="integer"/>
+        <!--是否进行自动轮播-->
         <attr name="autoplayable" format="boolean"/>
+        <!--指示器类型-->
+        <attr name="indicator_type" format="enum">
+            <enum name="pot" value="0"/>
+            <enum name="num" value="1"/>
+        </attr>
+        <!--指示点左右外间距-->
+        <attr name="indicatorPoint_horizontalMargin" format="dimension"/>
+        <!--指示器容器上下内间距-->
+        <attr name="indicatorContainer_verticalPadding" format="dimension"/>
+        <!--数字指示器字体大小-->
+        <attr name="indicatorNum_textSize" format="dimension"/>
+        <!--数字指示器字体颜色-->
+        <attr name="indicatorNUm_textColor" format="color"/>
     </declare-styleable>
 </resources>

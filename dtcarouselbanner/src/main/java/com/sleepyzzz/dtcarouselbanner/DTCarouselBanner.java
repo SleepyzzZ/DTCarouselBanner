@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -76,6 +77,21 @@ public class DTCarouselBanner extends RelativeLayout {
     //是否加载的是网络图片
     private boolean mIsNetImages = false;
 
+    //指示器类型
+    private static final int POT = 0;
+    private static final int NUM = 1;
+    private int mIndicatorType;
+
+    //指示点左右外间距
+    private int mIndicatorPointMargin;
+    //指示容器上下内间距
+    private int mIndicatorContanierPadding;
+
+    //数字指示器字体大小
+    private int mIndicatorNumSize;
+    //数字指示器字体颜色
+    private int mIndicatorNumColor;
+
     public DTCarouselBanner(Context context) {
         this(context, null);
     }
@@ -99,6 +115,19 @@ public class DTCarouselBanner extends RelativeLayout {
                 R.styleable.DTCarouselBanner_autoplay_internal, 3000);
         mAutoPlayable = ta.getBoolean(
                 R.styleable.DTCarouselBanner_autoplayable, true);
+        mIndicatorType = ta.getInt(
+                R.styleable.DTCarouselBanner_indicator_type, POT);
+        mIndicatorPointMargin = ta.getDimensionPixelSize(
+                R.styleable.DTCarouselBanner_indicatorPoint_horizontalMargin,
+                DisplayUtil.dip2px(context, 3));
+        mIndicatorContanierPadding = ta.getDimensionPixelSize(
+                R.styleable.DTCarouselBanner_indicatorContainer_verticalPadding,
+                DisplayUtil.dip2px(context, 5));
+        mIndicatorNumSize = ta.getDimensionPixelSize(
+                R.styleable.DTCarouselBanner_indicatorNum_textSize,
+                DisplayUtil.sp2px(context, 10));
+        mIndicatorNumColor = ta.getColor(
+                R.styleable.DTCarouselBanner_indicatorNUm_textColor, Color.WHITE);
         ta.recycle();
 
         //关闭over_scroll效果
@@ -112,7 +141,7 @@ public class DTCarouselBanner extends RelativeLayout {
         mViewPager = new ViewPager(context);
         addView(mViewPager, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        //圆点指示器背景容器relativelayout
+        //指示器背景容器relativelayout
         RelativeLayout indicatorContainerRl = new RelativeLayout(context);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             indicatorContainerRl.setBackground(mIndicatorBackground);
@@ -121,7 +150,7 @@ public class DTCarouselBanner extends RelativeLayout {
         }
 
         //边距
-        indicatorContainerRl.setPadding(0, 10, 0, 10);
+        indicatorContainerRl.setPadding(0, mIndicatorContanierPadding, 0, mIndicatorContanierPadding);
         //指示器容器layout
         LayoutParams indicatorContainerLp = new LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT);
@@ -277,7 +306,7 @@ public class DTCarouselBanner extends RelativeLayout {
 
     private void initPlayer() {
         if (!mJustOneImage) {
-            addIndicatorPoints();
+            addIndicator();
         }
 
         mViewPager.setAdapter(new CarouselPagerAdapter());
@@ -296,7 +325,11 @@ public class DTCarouselBanner extends RelativeLayout {
                     mCurrentPos = position % (mLocalImages.size() + 2);
                 }
                 //切换指示器
-                switchIndicator(getRealPosition(position));
+                if (mIndicatorType == POT) {
+                    switchIndicator(getRealPosition(position));
+                } else {
+                    switchIndicator(getRealPosition(position), mViewPager.getAdapter().getCount()-2);
+                }
             }
 
             /**
@@ -327,7 +360,7 @@ public class DTCarouselBanner extends RelativeLayout {
     }
 
     /**
-     * 切换指示器
+     * 切换圆点指示器指示器
      * @param currentIndex
      */
     private void switchIndicator(int currentIndex) {
@@ -339,24 +372,44 @@ public class DTCarouselBanner extends RelativeLayout {
     }
 
     /**
-     * 根据加载的额图片数量添加指示点
+     * 切换数字指示器
+     * @param index-当前viewpager位置
+     * @param length
      */
-    private void addIndicatorPoints() {
+    private void switchIndicator(int index, int length) {
+
+        ((TextView) mIndicatorContanierLl.getChildAt(0)).
+                setText((index+1)+"/"+length);
+    }
+
+    /**
+     * 根据加载的图片数量添加指示器
+     */
+    private void addIndicator() {
 
         mIndicatorContanierLl.removeAllViews();
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(5, 5, 5, 5);
-        ImageView imageView;
-        int length = mIsNetImages ? mNetImages.size() : mLocalImages.size();
-        for (int i = 0;i < length;i++) {
-            imageView = new ImageView(getContext());
-            imageView.setLayoutParams(lp);
-            imageView.setImageResource(R.drawable.selector_indicator);
-            mIndicatorContanierLl.addView(imageView);
-        }
+        lp.setMargins(mIndicatorPointMargin, 0, mIndicatorPointMargin, 0);
 
-        switchIndicator(0);
+        int length = mIsNetImages ? mNetImages.size() : mLocalImages.size();
+        if (mIndicatorType == POT) {
+            ImageView imageView;
+            for (int i = 0;i < length;i++) {
+                imageView = new ImageView(getContext());
+                imageView.setLayoutParams(lp);
+                imageView.setImageResource(R.drawable.selector_indicator);
+                mIndicatorContanierLl.addView(imageView);
+            }
+            switchIndicator(0);
+        } else {
+            TextView textView = new TextView(getContext());
+            textView.setTextColor(mIndicatorNumColor);
+            textView.setTextSize(mIndicatorNumSize);
+            textView.setLayoutParams(lp);
+            mIndicatorContanierLl.addView(textView);
+            switchIndicator(0, length);
+        }
     }
 
     private class CarouselPagerAdapter extends PagerAdapter {

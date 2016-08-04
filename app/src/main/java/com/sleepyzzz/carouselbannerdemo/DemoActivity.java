@@ -2,6 +2,7 @@ package com.sleepyzzz.carouselbannerdemo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.sleepyzzz.dtcarouselbanner.DTCarouselBanner;
 
@@ -41,5 +42,13 @@ public class DemoActivity extends AppCompatActivity {
 
         mCarouselBanner1.setLocalImages(mLocalImages);
         mCarouselBanner2.setNetImages(mNetImages);
+
+        mCarouselBanner1.setOnItemClickListener(new DTCarouselBanner.OnItemClickListener() {
+            @Override
+            public void onItemClick(int pos) {
+                Toast.makeText(getApplicationContext(),
+                        "click item " + (pos+1), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

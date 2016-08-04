@@ -19,8 +19,9 @@
         android:layout_height="200dp"
         custom:autoplay_internal="5000"
         custom:autoplayable="true"
-        custom:indicator_position="RIGHT"
-        custom:indicator_visibility="true"/>
+        custom:indicator_position="CENTER"
+        custom:indicator_visibility="true"
+        custom:indicator_type="num"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -34,6 +35,6 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         custom:autoplay_internal="3000"
-        custom:indicator_position="CENTER"
+        custom:indicator_position="RIGHT"
         custom:indicator_visibility="true"/>
 </LinearLayout>
